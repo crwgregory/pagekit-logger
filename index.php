@@ -6,11 +6,12 @@
  * Time: 11:45 AM
  */
 
+use Pagekit\Application as App;
 use Nativerank\Utilities\PagekitLogger as Logger;
 
 return [
 
-   'name' => 'Pagekit Logger',
+   'name' => 'pagekit-logger',
 
    'type' => 'extension',
 
