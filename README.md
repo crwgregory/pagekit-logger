@@ -21,7 +21,7 @@ Log Level: ERROR
 $logger = new PagekitLogger('MyLogger');
 $logger->log('Hello log!');
 ```
-#### Or
+##### Or
 ```
 $logger = App::logger();
 $logger->log('Hello log!');
