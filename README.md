@@ -1,4 +1,4 @@
-# pagekitlogger
+# pagekit-logger
 ## Allows for easy logging in the Pagekit CMS
 
 #### Install:
