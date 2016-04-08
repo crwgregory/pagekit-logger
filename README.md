@@ -9,16 +9,17 @@ php pagekit install nativerank/pagekit-logging
 
 #### Defaults:
 ```
-Path: pagekit/tmp/logs/errors.log
-Log Level: ERROR
+Name:       PagekitLogger
+Path:       pagekit/tmp/logs/errors.log
+Log Level:  ERROR
 
 // Looks like
-[2016-04-08 16:24:24] MyLogger.WARNING: Hello Log! [] []
+[2016-04-08 16:24:24] PagekitLogger.WARNING: Hello Log! [] []
 ```
 
 #### Usage:
 ```
-$logger = new PagekitLogger('MyLogger');
+$logger = new PagekitLogger();
 $logger->log('Hello log!');
 ```
 ##### Or
@@ -29,8 +30,9 @@ $logger->log('Hello log!');
 
 #### Options:
 ```
-$logger = new PagekitLogger('MyLogger', 'MyLog.log');               // Change file name
-$logger = new PagekitLogger('MyLogger', 'MyExtension/MyLog.log');   // Change path and file name
+$logger = new PagekitLogger('MyLogger');                            // Change Logger name
+$logger = new PagekitLogger('MyLogger', 'MyLog.log');               // Change file name (./tmp/logs/MyLog.log)
+$logger = new PagekitLogger('MyLogger', 'MyExtension/MyLog.log');   // Change path and file name (./tmp/logs/MyExtension/MyLog.log)
 
 $logger->log('Hello log!', PagekitLogger::INFO);                    // Log level INFO
 ```
