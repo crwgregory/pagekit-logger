@@ -103,7 +103,7 @@ class PagekitLogger
    * @param string $filePath Allows for multiple log files default = errors.log ie: MyExtension/MyClass.log,
    *  MyCompany/MyException.log
    */
-  public function __construct($name, $filePath = 'errors.log')
+  public function __construct($name = 'PagekitLogger', $filePath = 'errors.log')
   {
     $this->appInstance = App::getInstance();
     $this->logPath = $this->appInstance->offsetGet('path.logs') . '/' . $filePath;

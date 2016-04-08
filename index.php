@@ -17,7 +17,7 @@ return [
 
    'main' => function (App $app) {
       $app['logger'] = function() {
-        return new Logger('PagekitLogger');
+        return new Logger();
       };
    },
 
