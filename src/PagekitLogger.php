@@ -116,7 +116,7 @@ class PagekitLogger
    * Thanks Monolog!
    * @throws App\Exception
    */
-  public function log($message, $level) {
+  public function log($message, $level  = Logger::ERROR) {
 
     // TODO: Add mailing for certain logs.
     switch($level) {
