@@ -4,7 +4,7 @@
 #### Install:
 ```
 //You have to activate the extension after installing
-php pagekit install nativerank/pagekit-logging 
+php pagekit install nativerank/pagekit-logger 
 ```
 
 #### Defaults:
