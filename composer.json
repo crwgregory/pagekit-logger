@@ -1,0 +1,15 @@
+{
+  "name": "nativerank/pagekitlogger",
+  "type": "pagekit-extension",
+  "version": "0.1.0",
+  "title": "Pagekit Logger",
+  "description": "Logging Extension for use in any of your Pagekit Extensions",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Chris Gregory",
+      "email": "chris.gregory@nativerank.com",
+      "homepage": "http://nativerank.com/"
+    }
+  ]
+}
