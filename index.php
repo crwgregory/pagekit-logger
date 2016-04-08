@@ -16,8 +16,8 @@ return [
    'type' => 'extension',
 
    'main' => function (App $app) {
-      $app['logger'] = function($name = '') {
-        return new Logger($name);
+      $app['logger'] = function() {
+        return new Logger('PagekitLogger');
       };
    },
 

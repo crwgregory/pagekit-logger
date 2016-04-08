@@ -8,6 +8,10 @@ Usage:
 ```
 $logger = new PagekitLogger('MyLogger');
 $logger->log('Hello log!', PagekitLogger::INFO);
+
+//==============================================\\
+$logger = App::logger();
+$logger->log('Hello log!', PagekitLogger::INFO);
 ```
 
 Options:
