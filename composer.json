@@ -1,6 +1,6 @@
 {
   "name": "nativerank/pagekit-logger",
-  "version": "0.1.0",
+  "type": "pagekit-extension",
   "title": "Pagekit Logger",
   "description": "Easy logging in any of your Pagekit extensions",
   "license": "MIT",
@@ -10,5 +10,10 @@
       "email": "chris.gregory@nativerank.com",
       "homepage": "http://nativerank.com/"
     }
-  ]
+  ],
+  "autoload": {
+    "psr-4": {
+      "Nativerank\\Utilities\\": "src"
+    }
+  }
 }
