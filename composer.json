@@ -1,5 +1,5 @@
 {
-  "name": "nativerank/pagekitlogger",
+  "name": "nativerank/pagekit-logger",
   "version": "0.1.0",
   "title": "Pagekit Logger",
   "description": "Easy logging in any of your Pagekit extensions",
