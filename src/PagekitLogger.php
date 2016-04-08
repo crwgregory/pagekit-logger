@@ -108,7 +108,6 @@ class PagekitLogger
     $this->appInstance = App::getInstance();
     $this->logPath = $this->appInstance->offsetGet('path.logs') . '/' . $filePath;
     $this->logger = new Logger($name);
-    var_dump($this->logPath);
   }
 
   /**
