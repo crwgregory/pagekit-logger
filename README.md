@@ -3,8 +3,8 @@
 
 #### Install:
 ```
-// Activate after installing
 php pagekit install nativerank/pagekit-logger 
+// Activate after installing in the System
 ```
 
 #### Defaults:
@@ -19,21 +19,26 @@ Log Level:  ERROR
 
 #### Usage:
 ```
+// Log a simple String
 $logger = new PagekitLogger();
 $logger->log('Hello log!');
-```
-##### Or
-```
-$logger = App::logger();
+
+// Register the logger in the index.php file
+$logger = App::getLogger();
 $logger->log('Hello log!');
+
+// Log an exception
+$logger->logException($e);
 ```
 
 #### Options:
 ```
+// Name & Location
 $logger = new PagekitLogger('MyLogger');                            // Change Logger name
 $logger = new PagekitLogger('MyLogger', 'MyLog.log');               // Change file name (./tmp/logs/MyLog.log)
 $logger = new PagekitLogger('MyLogger', 'MyExtension/MyLog.log');   // Change path and file name (./tmp/logs/MyExtension/MyLog.log)
 
+// Log Level
 $logger->log('Hello log!', PagekitLogger::INFO);                    // Log level INFO
 ```
 

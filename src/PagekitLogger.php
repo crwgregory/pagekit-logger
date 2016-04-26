@@ -111,6 +111,20 @@ class PagekitLogger
   }
 
   /**
+   * @param \Exception $e
+   */
+  public function logException($e) {
+    $message =  'MESSAGE: ' . $e->getMessage() .
+                ' FILE: ' . $e->getFile() .
+                ' LINE: ' . $e->getLine() .
+                ' TRACE: ' . $e->getTraceAsString();
+
+    $level = intval($e->getCode());
+
+    $this->log($message, $level);
+  }
+
+  /**
    * @param string $message What would you like to say?
    * @param integer $level Provided by the constants shamelessly stolen from the Monolog\Logger.php class.
    * Thanks Monolog!
@@ -153,7 +167,7 @@ class PagekitLogger
         $this->logger->addEmergency($message);
         break;
       default:
-        throw new App\Exception('Provided log level did not match any known values');
+        throw new App\Exception('Provided log level did not match any known values: ' . $level);
     }
   }
 }
