@@ -112,15 +112,18 @@ class PagekitLogger
 
   /**
    * @param \Exception $e
-   * @param \int $level
+   * @param boolean $trace
+   * @param int $level
    * @throws App\Exception
    */
-  public function logException($e, $level = null) {
+  public function logException($e, $trace = false, $level = null) {
     $message =  'MESSAGE: ' . $e->getMessage() .
                 ' FILE: ' . $e->getFile() .
-                ' LINE: ' . $e->getLine() .
-                ' TRACE: ' . $e->getTraceAsString();
+                ' LINE: ' . $e->getLine();
 
+    if ($trace == true) {
+      $message .= ' TRACE: ' . $e->getTraceAsString();
+    }
 
     if ($level != null) {
       if (!array_key_exists($level, $this->levels)) {
