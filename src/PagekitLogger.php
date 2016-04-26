@@ -112,14 +112,25 @@ class PagekitLogger
 
   /**
    * @param \Exception $e
+   * @param \int $level
+   * @throws App\Exception
    */
-  public function logException($e) {
+  public function logException($e, $level = null) {
     $message =  'MESSAGE: ' . $e->getMessage() .
                 ' FILE: ' . $e->getFile() .
                 ' LINE: ' . $e->getLine() .
                 ' TRACE: ' . $e->getTraceAsString();
 
-    $level = intval($e->getCode());
+
+    if ($level != null) {
+      if (!array_key_exists($level, $this->levels)) {
+        throw new App\Exception('Provided log level did not match any known values: ' . $level);
+      }
+    } else if (array_key_exists($e->getCode(), $this->levels)) {
+      $level = intval($e->getCode());
+    } else {
+      $level = Logger::ERROR;
+    }
 
     $this->log($message, $level);
   }
