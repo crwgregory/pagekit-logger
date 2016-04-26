@@ -3,18 +3,26 @@
 
 #### Install:
 ```
-php pagekit install nativerank/pagekit-logger 
-// Activate after installing in the System
+php pagekit install nativerank/pagekit-logger   // Activate after installing in the System
 ```
 
 #### Defaults:
 ```
 Name:       PagekitLogger
 Path:       pagekit/tmp/logs/errors.log
+
+Message Logging:
 Log Level:  ERROR
 
-// Looks like
+Exception Logging:
+Print Trace: false
+Log Level: ERROR
+
+// Message Logging looks like:
 [2016-04-08 16:24:24] PagekitLogger.WARNING: Hello Log! [] []
+
+// Exception Logging looks like:
+[2016-04-08 16:24:24] PagekitLogger.ERROR: MESSAGE: (exception message) FILE: (path to file) LINE: (line of error) TRACE: (if the trace flag is set to true)[] []
 ```
 
 #### Usage:
@@ -23,7 +31,7 @@ Log Level:  ERROR
 $logger = new PagekitLogger();
 $logger->log('Hello log!');
 
-// Register the logger in the index.php file
+// Register the logger in the index.php file (recommended)
 $logger = App::getLogger();
 $logger->log('Hello log!');
 
@@ -40,6 +48,10 @@ $logger = new PagekitLogger('MyLogger', 'MyExtension/MyLog.log');   // Change pa
 
 // Log Level
 $logger->log('Hello log!', PagekitLogger::INFO);                    // Log level INFO
+
+// Exceptions:
+$logger->logException($e, true);                                    // Log the exception trace
+$logger->logException($e, {true|false}, PagekitLogger::CRITICAL);   // Custom Error Level
 ```
 
 #### Log Levels:
