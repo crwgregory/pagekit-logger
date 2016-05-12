@@ -65,3 +65,6 @@ $logger->logException($e, {true|false}, PagekitLogger::CRITICAL);   // Custom Er
     <li>ALERT</li>
     <li>EMERGENCY</li>
 </ul>
+
+#### License:
+MIT
