@@ -117,9 +117,10 @@ class PagekitLogger
    * @throws App\Exception
    */
   public function logException($e, $trace = false, $level = null) {
-    $message =  'MESSAGE: ' . $e->getMessage() .
-                ' FILE: ' . $e->getFile() .
-                ' LINE: ' . $e->getLine();
+    $message =  'EXCEPTION: ' . get_class($e) .
+                ' MESSAGE: '  . $e->getMessage() .
+                ' FILE: '     . $e->getFile() .
+                ' LINE: '     . $e->getLine();
 
     if ($trace == true) {
       $message .= ' TRACE: ' . $e->getTraceAsString();
