@@ -8,13 +8,11 @@
   "authors": [
     {
       "name": "Chris Gregory",
-      "email": "chris.gregory@nativerank.com",
-      "homepage": "http://nativerank.com/"
+      "email": "crwgregory@gamil.com",
+      "homepage": "crwgregory.com"
     }
   ],
-  "autoload": {
-    "psr-4": {
-      "Nativerank\\Utilities\\": "src"
-    }
+  "extra": {
+    "icon": "log.svg"
   }
 }
