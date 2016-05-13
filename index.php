@@ -47,12 +47,25 @@ return [
     'menu' => [
         'pagekitlogger' => [
             'label'  => 'Logger',
+
+            // Icon credits:
             // <div>Icons made by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from
             // <a href="http://www.flaticon.com" title="Flaticon">www.flaticon.com</a>
             // is licensed by <a href="http://creativecommons.org/licenses/by/3.0/"
             // title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
             'icon'   =>  'pagekitlogger:log.svg',
+
             'url'    => '@logger'
+        ],
+        'pagekitlogger: logs' => [
+            'label' => 'Logs',
+            'parent' => 'pagekitlogger',
+            'url' => '@logger'
+        ],
+        'pagekitlogger: settings' => [
+            'label' => 'Settings',
+            'parent' => 'pagekitlogger',
+            'url' => '@logger/settings'
         ]
     ],
 ];
