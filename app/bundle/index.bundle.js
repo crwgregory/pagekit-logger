@@ -55,7 +55,8 @@
 	      exceptions: [],
 	      messages: [],
 	      hasExceptions : false,
-	      hasMessages: false
+	      hasMessages: false,
+
 	    }
 	  },
 
@@ -66,13 +67,13 @@
 
 	      if (log.exception) {
 
-	        $this.exceptions.push(log);
+	        $this.exceptions.push(log.exception);
 
 	        $this.$set('hasExceptions', true);
 
 	      } else {
 
-	        $this.messages.push(log);
+	        $this.messages.push(log.message);
 
 	        $this.$set('hasMessages', true);
 	      }
@@ -127,6 +128,8 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var errorLevels = [[100, 'DEBUG'], [200, 'INFO'], [250, 'NOTICE'], [300, 'WARNING'], [400, 'ERROR'], [500, 'CRITICAL'], [550, 'ALERT'], [600, 'EMERGENCY']];
+
 	module.exports = {
 	    data: function data() {
 	        return {
@@ -142,7 +145,7 @@
 
 	        var keys = [];
 
-	        this.exceptions.forEach(function (e, i) {
+	        this.exceptions.forEach(function (e) {
 
 	            var y = JSON.parse((0, _stringify2.default)(e.exception));
 
@@ -160,6 +163,22 @@
 	        });
 	    },
 
+
+	    filters: {
+	        'mapErrorLevel': function mapErrorLevel(level) {
+	            var x = '';
+
+	            errorLevels.forEach(function (el) {
+
+	                if (level === el[0]) {
+
+	                    x = el[1];
+	                    return;
+	                }
+	            });
+	            return x;
+	        }
+	    },
 
 	    mixins: [__webpack_require__(6)]
 	};
@@ -217,7 +236,7 @@
 /* 7 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div class=\"uk-panel uk-panel-box uk-panel-box-primary\">\n    <h1 class=\"uk-panel-title\">Exceptions</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td v-for=\"key in exceptionKeys\"><b>{{ key | explodingCamels | capitalize }}</b></td>\n        </tr>\n        </thead>\n        <tbody>\n        <tr v-for=\"exception in exceptions\">\n            <td v-for=\"value in exception.exception\">{{ value }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n";
+	module.exports = "\n<div class=\"uk-panel uk-panel-box uk-panel-box-primary\">\n    <h1 class=\"uk-panel-title\">Exceptions</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td><b>Logger Name</b></td>\n            <td><b>Exception Class</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Message</b></td>\n            <td><b>Count</b></td>\n        </tr>\n        </thead>\n        <tbody>\n        <tr v-for=\"exception in exceptions\">\n            <td>{{ exception.loggerName }}</td>\n            <td>{{ exception.exceptionClass }}</td>\n            <td>{{ exception.errorLevel | mapErrorLevel }}</td>\n            <td>{{ exception.message }}</td>\n            <td>{{ exception.count }}</td>\n        </tr>\n        </tbody>\n    </table>\n</div>\n";
 
 /***/ },
 /* 8 */

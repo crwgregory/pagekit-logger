@@ -11,6 +11,8 @@ namespace Nativerank\Utilities;
 use Monolog\Handler\StreamHandler;
 use Pagekit\Log\Logger;
 use Pagekit\Application as App;
+use Nativerank\Logger\Model\LoggerORM;
+use Nativerank\Logger\Utilities\LogTruck;
 
 class PagekitLogger
 {
@@ -92,6 +94,16 @@ class PagekitLogger
   protected $logger;
 
   /**
+   * @var string
+   */
+  protected $name;
+
+  /**
+   * @var LogTruck
+   */
+  protected $logTruck;
+
+  /**
    * LogHelper constructor.
    * @param string $name Name for the Logger ie: Nativerank, Pagekit, MyExtension
    * @param string $filePath Allows for multiple log files default = errors.log ie: MyExtension/MyClass.log,
@@ -120,6 +132,10 @@ class PagekitLogger
     }
 
     $this->logger = new Logger($name);
+
+    $this->name = $name;
+
+    $this->logTruck = new LogTruck();
   }
 
   /**
@@ -129,22 +145,34 @@ class PagekitLogger
    * @throws App\Exception
    */
   public function logException($e, $trace = false, $level = null) {
-    $message =  'EXCEPTION: ' . get_class($e) .
-                ' MESSAGE: '  . $e->getMessage() .
-                ' FILE: '     . $e->getFile() .
-                ' LINE: '     . $e->getLine();
 
-    if ($trace == true) {
-      $message .= ' TRACE: ' . $e->getTraceAsString();
+    $message['exception_class'] = get_class($e);
+
+    $message['message'] = $e->getMessage();
+
+    $message['file'] = $e->getFile();
+
+    $message['line'] = $e->getLine();
+
+    if ($trace === true) {
+
+      $message['trace'] = $e->getTraceAsString();
+
     }
 
-    if ($level != null) {
+    if ($level !== null) {
+
       if (!array_key_exists($level, $this->levels)) {
+
         throw new App\Exception('Provided log level did not match any known values: ' . $level);
       }
+
     } else if (array_key_exists($e->getCode(), $this->levels)) {
+
       $level = intval($e->getCode());
+
     } else {
+
       $level = Logger::ERROR;
     }
 
@@ -157,44 +185,64 @@ class PagekitLogger
    * Thanks Monolog!
    * @throws App\Exception
    */
-  public function log($message, $level  = Logger::ERROR) {
-
+  public function log($message, $level  = Logger::ERROR)
+  {
     // TODO: Add mailing for certain logs.
-    switch($level) {
-      case $this->levels[$level] == 'DEBUG':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::DEBUG));
-        $this->logger->addDebug($message);
-        break;
-      case $this->levels[$level] == 'INFO':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::INFO));
-        $this->logger->addInfo($message);
-        break;
-      case $this->levels[$level] == 'NOTICE':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::NOTICE));
-        $this->logger->addNotice($message);
-        break;
-      case $this->levels[$level] == 'WARNING':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::WARNING));
-        $this->logger->addWarning($message);
-        break;
-      case $this->levels[$level] == 'ERROR':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::ERROR));
-        $this->logger->addError($message);
-        break;
-      case $this->levels[$level] == 'CRITICAL':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::CRITICAL));
-        $this->logger->addCritical($message);
-        break;
-      case $this->levels[$level] == 'ALERT':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::ALERT));
-        $this->logger->addAlert($message);
-        break;
-      case $this->levels[$level] == 'EMERGENCY':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::EMERGENCY));
-        $this->logger->addEmergency($message);
-        break;
-      default:
-        throw new App\Exception('Provided log level did not match any known values: ' . $level);
+
+    $hash = $this->getHash($message);
+
+    $log = $this->logTruck->getLog($hash);
+
+    if ($log === null) {
+
+      $log = LoggerORM::create(
+          [
+            'log_hash' => $hash,
+            'count' => 1,
+            'error_level' => $level,
+            'logger_name' => $this->name,
+            'log' => $message,
+            'dates' => [gmdate(DATE_ATOM)]
+          ]
+      );
+
+    } else {
+
+      $log->count = intval($log->count) + 1;
+
+      array_push($log->dates, gmdate(DATE_ATOM));
+
     }
+
+    $log->save();
+  }
+
+  /**
+   * @param $message
+   * @return string
+   */
+  private function getHash($message)
+  {
+    $toHash = '';
+
+    if (is_array($message)) {
+
+      foreach ($message as $key => $value) {
+
+        for ($i = 0; $i < strlen($value); $i += 3) {
+
+          $toHash .= substr($value, $i, 1);
+        }
+      }
+    } else {
+
+      $messageLngth = strlen($message);
+
+      for ($i = 0; $i < $messageLngth; $i++) {
+
+        $toHash .= substr($message, $i, 1);
+      }
+    }
+    return hash('md5', $toHash);
   }
 }

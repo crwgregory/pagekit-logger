@@ -9,6 +9,7 @@
 namespace Nativerank\Logger\Controller;
 
 use Nativerank\Logger\Utilities\LogTrimmer;
+use Nativerank\Logger\Utilities\LogTruck;
 use Pagekit\Application as App;
 
 use Nativerank\Utilities\PagekitLogger;
@@ -20,12 +21,12 @@ use Nativerank\Utilities\PagekitLogger;
  */
 class LoggerController
 {
-
-
     /**
      * @var LogTrimmer
      */
     protected $logTrimmer;
+
+    protected $logTruck;
 
     /**
      * LoggerController constructor.
@@ -33,6 +34,8 @@ class LoggerController
     public function __construct()
     {
         $this->logTrimmer = new LogTrimmer();
+
+        $this->logTruck = new LogTruck();
     }
 
     /**
@@ -45,7 +48,11 @@ class LoggerController
 //        $logger = new PagekitLogger();
 //        $logger->logException($e);
 
-        $logs = $this->logTrimmer->cutLogs();
+//        $logger->log('hello world');
+
+//        $logs = $this->logTrimmer->cutLogs();
+
+        $logs = $this->logTruck->getLogs();
 
         return [
             '$view' => [

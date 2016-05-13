@@ -9,7 +9,8 @@ window.Index = {
       exceptions: [],
       messages: [],
       hasExceptions : false,
-      hasMessages: false
+      hasMessages: false,
+
     }
   },
 
@@ -20,13 +21,13 @@ window.Index = {
 
       if (log.exception) {
 
-        $this.exceptions.push(log);
+        $this.exceptions.push(log.exception);
 
         $this.$set('hasExceptions', true);
 
       } else {
 
-        $this.messages.push(log);
+        $this.messages.push(log.message);
 
         $this.$set('hasMessages', true);
       }
