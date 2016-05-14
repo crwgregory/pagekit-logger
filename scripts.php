@@ -13,7 +13,7 @@ return [
                 $table->addColumn('log_hash', 'string', ['length' => 40]);
                 $table->addColumn('count', 'integer', ['length' => 10]);
                 $table->addColumn('error_level', 'integer', ['length' => 3]);
-                $table->addColumn('logger_name', 'text');
+                $table->addColumn('logger_name', 'string', ['length' => 24]);
                 $table->addColumn('dates', 'json_array');
                 $table->addColumn('log', 'json_array');
 

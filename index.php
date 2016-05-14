@@ -40,7 +40,8 @@ return [
     'config' => [
         'log_path' => App::getInstance()->offsetGet('path.logs'),
         'created_paths' => [],
-        'logger_names' => []
+        'logger_names' => [],
+        'current_paths' => []
 
     ],
 
