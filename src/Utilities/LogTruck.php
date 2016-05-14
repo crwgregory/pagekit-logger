@@ -64,7 +64,7 @@ class LogTruck
             $logsArray[] = $isException ? ['exception' => $logCabin] : ['message' => $logCabin];
 
         }
-
+//        var_dump($logsArray);
         return $logsArray;
     }
 

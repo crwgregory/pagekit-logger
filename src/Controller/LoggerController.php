@@ -44,13 +44,11 @@ class LoggerController
      */
     function indexAction()
     {
-//        $e = new App\Exception('hello');
+//        $e = new App\Exception('hello world');
 //        $logger = new PagekitLogger();
 //        $logger->logException($e);
 
 //        $logger->log('hello world');
-
-//        $logs = $this->logTrimmer->cutLogs();
 
         $logs = $this->logTruck->getLogs();
 

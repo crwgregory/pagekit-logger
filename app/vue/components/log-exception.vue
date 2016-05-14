@@ -4,6 +4,7 @@
         <table class="uk-table uk-table-hover">
             <thead>
             <tr>
+                <td></td>
                 <td><b>Logger Name</b></td>
                 <td><b>Exception Class</b></td>
                 <td><b>Error Level</b></td>
@@ -12,15 +13,70 @@
             </tr>
             </thead>
             <tbody>
-            <tr v-for="exception in exceptions">
-                <td>{{ exception.loggerName }}</td>
-                <td>{{ exception.exceptionClass }}</td>
-                <td>{{ exception.errorLevel | mapErrorLevel }}</td>
-                <td>{{ exception.message }}</td>
-                <td>{{ exception.count }}</td>
-            </tr>
+            <template v-for="exception in exceptions">
+                <tr class="" >
+                    <td><div class="uk-button" data-uk-offcanvas="{target: '#{{ exception.id }}'}">Details</div></td>
+                    <td>{{ exception.loggerName }}</td>
+                    <td>{{ exception.exceptionClass }}</td>
+                    <td>{{ exception.errorLevel | mapErrorLevel }}</td>
+                    <td>{{ exception.message }}</td>
+                    <td>{{ exception.count }}</td>
+                </tr>
+                <!--<tr>-->
+                    <!--<td class="accordion-td">-->
+                        <!--<div class="uk-accordion-content">-->
+                            <!--<div class="uk-panel uk-panel-box">-->
+                                <!--<table class="uk-table">-->
+                                    <!--<thead>-->
+                                    <!--<tr>-->
+                                        <!--<th>File</th>-->
+                                        <!--<th>Line</th>-->
+                                        <!--<th>Dates</th>-->
+                                    <!--</tr>-->
+                                    <!--</thead>-->
+                                    <!--<tbody>-->
+                                    <!--<tr>-->
+                                        <!--<td>{{ exception.file }}</td>-->
+                                        <!--<td>{{ exception.line }}</td>-->
+                                        <!--<td>{{ exception.dates }}</td>-->
+                                    <!--</tr>-->
+                                    <!--</tbody>-->
+                                <!--</table>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+            </template>
             </tbody>
         </table>
+        <div v-for="exception in exceptions" :id="exception.id" class="uk-offcanvas">
+            <div class="uk-offcanvas-bar">
+                <div class="uk-panel">
+                    <div class="uk-panel-title">
+                        File
+                    </div>
+                    <div class="uk-text-break">
+                        {{ exception.file }}
+                    </div>
+                </div>
+                <div class="uk-panel">
+                    <div class="uk-panel-title">
+                        Line
+                    </div>
+                    {{ exception.line }}
+                </div>
+                <div class="uk-panel">
+                    <div class="uk-panel-title">
+                        Dates
+                    </div>
+                    <ul>
+                        <li v-for="date in exception.dates">
+                            {{ date }}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 <script>
