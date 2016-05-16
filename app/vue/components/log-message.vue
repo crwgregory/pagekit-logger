@@ -32,7 +32,7 @@
                     <div class="uk-panel-title">
                         Dates
                     </div>
-                    <ul class="uk-list">
+                    <ul>
                         <li v-for="date in message.dates">
                             {{ date }}
                         </li>
