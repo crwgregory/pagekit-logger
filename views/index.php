@@ -8,6 +8,6 @@
     </div>
 
     <div class="uk-width-1-1">
-        <log-message v-if="hasExceptions" :messages="messages"></log-message>
+        <log-message v-if="hasMessages" :messages="messages"></log-message>
     </div>
 </div>
