@@ -56,18 +56,20 @@
                         <ul id="exception-info" class="uk-switcher">
                             <li class="uk-active">
                                 <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                                    <ul>
+                                    <ul class="uk-list">
                                         <li v-for="message in exception.message">
                                             {{ message }}
+                                            <br>
                                         </li>
                                     </ul>
                                 </div>
                             </li>
                             <li>
                                 <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                                    <ul>
+                                    <ul class="uk-list">
                                         <li v-for="date in exception.dates">
                                             {{ date }}
+                                            <br>
                                         </li>
                                     </ul>
                                 </div>
