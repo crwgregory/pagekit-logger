@@ -57,9 +57,8 @@
                             <li class="uk-active">
                                 <div class="uk-width-1-1 uk-panel uk-margin-bottom">
                                     <ul class="uk-list">
-                                        <li v-for="message in exception.message">
+                                        <li v-for="message in exception.message" class="uk-margin-bottom">
                                             {{ message }}
-                                            <br>
                                         </li>
                                     </ul>
                                 </div>
@@ -67,9 +66,8 @@
                             <li>
                                 <div class="uk-width-1-1 uk-panel uk-margin-bottom">
                                     <ul class="uk-list">
-                                        <li v-for="date in exception.dates">
+                                        <li v-for="date in exception.dates" class="uk-margin-bottom">
                                             {{ date }}
-                                            <br>
                                         </li>
                                     </ul>
                                 </div>

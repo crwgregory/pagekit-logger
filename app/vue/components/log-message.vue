@@ -33,9 +33,8 @@
                         Dates
                     </div>
                     <ul class="uk-list">
-                        <li v-for="date in message.dates">
+                        <li v-for="date in message.dates" class="uk-margin-bottom">
                             {{ date }}
-                            <br>
                         </li>
                     </ul>
                 </div>
