@@ -13,6 +13,7 @@ use Nativerank\Logger\Utilities\LogTruck;
 use Pagekit\Application as App;
 
 use Nativerank\Utilities\PagekitLogger;
+use Pagekit\Mail\Mailer;
 
 /**
  * Class LoggerController
@@ -44,6 +45,13 @@ class LoggerController
 //        $logger->logException($e);
 //
 //        $logger->log('hello world1');
+
+        $mailer = App::mailer()->create();
+
+        $mailer->setTo('crwgregory@gmail.com')
+            ->setSubject('from pagekit')
+            ->setBody('yolo')
+            ->send();
 
         $logs = $this->logTruck->getLogs();
 

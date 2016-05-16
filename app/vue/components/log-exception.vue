@@ -24,54 +24,63 @@
             </tbody>
         </table>
         <div v-for="exception in exceptions" :id="exception.id" class="uk-modal">
-            <div class="uk-modal-dialog">
+            <div class="uk-modal-dialog uk-modal-dialog-large">
                 <a class="uk-modal-close uk-close"></a>
-                <div class="uk-flex uk-flex-column">
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <div class="uk-panel-title">
-                            File
-                        </div>
-                        <div class="uk-text-break uk-margin-left">
-                            {{ exception.file }}
-                        </div>
+                <table class="uk-table uk-table-hover">
+                    <thead>
+                    <tr>
+                        <td><b>File Location</b></td>
+                        <td><b>Line Number</b></td>
+                        <td><b>Exception Class</b></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <template v-for="exception in exceptions">
+                        <tr>
+                            <td>{{ exception.file }}</td>
+                            <td>{{ exception.line }}</td>
+                            <td>{{ exception.exceptionClass }}</td>
+                        </tr>
+                    </template>
+                    </tbody>
+                </table>
+
+                <div class="uk-grid">
+                    <div class="uk-width-medium-2-10">
+                        <ul class="uk-tab uk-tab-left" data-uk-tab="{connect: '#exception-info'}">
+                            <li><a href="">Messages</a></li>
+                            <li><a href="">Dates</a></li>
+                        </ul>
                     </div>
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <div class="uk-panel-title">
-                            Line
-                        </div>
-                        <div class="uk-margin-left">
-                            {{ exception.line }}
-                        </div>
+                    <div class="uk-width-medium-1-2">
+                        <ul id="exception-info" class="uk-switcher">
+                            <li class="uk-active">
+                                <div class="uk-width-1-1 uk-panel uk-margin-bottom">
+                                    <ul class="uk-list">
+                                        <li v-for="message in exception.message">
+                                            {{ message }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="uk-width-1-1 uk-panel uk-margin-bottom">
+                                    <ul class="uk-list">
+                                        <li v-for="date in exception.dates">
+                                            {{ date }}
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <div class="uk-panel-title">
-                            Class
-                        </div>
-                        <div class="uk-margin-left">
-                            {{ exception.exceptionClass }}
-                        </div>
-                    </div>
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <article>
-                            <hr class="uk-article-divider">
-                        </article>
-                    </div>
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <div class="uk-panel-title">
-                            Messages
-                        </div>
-                        <article class="uk-margin-left" v-for="message in exception.message">
-                            <p>{{ message }}</p>
-                        </article>
-                    </div>
-                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                        <div class="uk-panel-title">
-                            Dates
-                        </div>
-                        <article class="uk-margin-left" v-for="date in exception.dates">
-                            <p>{{ date }}</p>
-                        </article>
-                    </div>
+                </div>
+
+                <!--<ul class="uk-tab" data-uk-tab="{connect: '#exception-info'}">-->
+                <!--</ul>-->
+                <!--<ul id="exception-info" class="uk-switcher uk-margin">-->
+
+                <!--</ul>-->
                 </div>
             </div>
         </div>

@@ -1,4 +1,4 @@
-<?php $view->script('index', 'pagekitlogger:app/bundle/index.bundle.js', ['vue', 'uikit-modal']); ?>
+<?php $view->script('index', 'pagekitlogger:app/bundle/index.bundle.js', ['vue', 'uikit-modal', 'uikit-tab']); ?>
 <?php $view->style('analyze-css', 'pagekitlogger:app/assets/styles/index.css'); ?>
 
 <div id="pagekit-logger-index" class="uk-grid">
