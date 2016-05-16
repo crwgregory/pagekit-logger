@@ -24,7 +24,7 @@
             </tbody>
         </table>
         <div v-for="exception in exceptions" :id="exception.id" class="uk-modal">
-            <div class="uk-modal-dialog uk-modal-dialog-large">
+            <div class="uk-modal-dialog">
                 <a class="uk-modal-close uk-close"></a>
                 <table class="uk-table uk-table-hover">
                     <thead>
