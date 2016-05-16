@@ -193,6 +193,21 @@ class PagekitLogger
 
     $log = $this->logTruck->getLog($hash);
 
+    if (is_array($message )) {
+
+      $logMessage = $message['message'];
+
+      unset($message['message']);
+
+      $exception = $message;
+
+    } else {
+
+      $logMessage = $message;
+
+      $exception = null;
+    }
+
     if ($log === null) {
 
       $log = LoggerORM::create(
@@ -201,7 +216,8 @@ class PagekitLogger
             'count' => 1,
             'error_level' => $level,
             'logger_name' => $this->name,
-            'log' => $message,
+            'messages' => [$logMessage],
+            'exception' => $exception,
             'dates' => [gmdate(DATE_ATOM)]
           ]
       );
@@ -210,8 +226,12 @@ class PagekitLogger
 
       $log->count = intval($log->count) + 1;
 
-      array_push($log->dates, gmdate(DATE_ATOM));
+      if (array_search($logMessage, $log->messages) === false) {
 
+        array_push($log->messages, $logMessage);
+      }
+
+      array_push($log->dates, gmdate(DATE_ATOM));
     }
 
     $log->save();
@@ -229,11 +249,15 @@ class PagekitLogger
 
       foreach ($message as $key => $value) {
 
-        for ($i = 0; $i < strlen($value); $i += 3) {
+        if ($key !== 'message') {
 
-          $toHash .= substr($value, $i, 1);
+          for ($i = 0; $i < strlen($value); $i += 3) {
+
+            $toHash .= substr($value, $i, 1);
+          }
         }
       }
+
     } else {
 
       $messageLngth = strlen($message);
@@ -243,6 +267,7 @@ class PagekitLogger
         $toHash .= substr($message, $i, 1);
       }
     }
+
     return hash('md5', $toHash);
   }
 }

@@ -33,25 +33,25 @@ class LogTruck
 
             $logCabin = [];
 
-            if (is_array($log['log'])) {
+            if ($log['exception'] !== null && is_array($log['exception']) && count($log['exception']) > 0) {
 
                 $isException = true;
 
-                foreach ($log['log'] as $key => $value) {
+                foreach ($log['exception'] as $key => $value) {
 
                     $key = $this->deathByCamels($key);
 
                     $logCabin[$key] = $value;
-
                 }
-
-            } else {
-
-                $logCabin['message'] = $log['log'];
-
             }
 
-            $logCabin['dates'] = $log['dates'];
+            $logCabin['message'] = $log['messages'];
+
+            $logCabin['dates'] = array_map(function($date) {
+                $date = new \DateTime($date);
+                return date_format($date, 'Y/m/d H:i:s');
+
+            }, $log['dates']);
 
             $logCabin['count'] = $log['count'];
 
@@ -64,7 +64,7 @@ class LogTruck
             $logsArray[] = $isException ? ['exception' => $logCabin] : ['message' => $logCabin];
 
         }
-//        var_dump($logsArray);
+
         return $logsArray;
     }
 
@@ -77,6 +77,12 @@ class LogTruck
         return LoggerORM::where(['log_hash = :hash'], ['hash' => $hash])->first();
     }
 
+    /**
+     * Returns a Javascript formatted name from a database formatted one
+     * hello_world => helloWorld
+     * @param $string
+     * @return string
+     */
     private function deathByCamels($string)
     {
         $this->index = 0;

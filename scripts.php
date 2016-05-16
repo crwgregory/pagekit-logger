@@ -15,7 +15,8 @@ return [
                 $table->addColumn('error_level', 'integer', ['length' => 3]);
                 $table->addColumn('logger_name', 'string', ['length' => 24]);
                 $table->addColumn('dates', 'json_array');
-                $table->addColumn('log', 'json_array');
+                $table->addColumn('messages', 'json_array');
+                $table->addColumn('exception', 'json_array', ['notnull' => false]);
 
                 $table->setPrimaryKey(['id']);
 

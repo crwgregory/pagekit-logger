@@ -1,21 +1,35 @@
 
 module.exports = {
 
+  data: function() {
+    return {
+      errorLevels : [
+        [100, 'DEBUG'],
+        [200, 'INFO'],
+        [250, 'NOTICE'],
+        [300, 'WARNING'],
+        [400, 'ERROR'],
+        [500, 'CRITICAL'],
+        [550, 'ALERT'],
+        [600, 'EMERGENCY']
+      ]
+    }
+  },
+
   filters: {
-    'explodingCamels': function(string) {
-      var toReturn = '';
-      if (string) {
-        for (var i = 0; i < string.length; i++) {
-          var character = string.charAt(i);
-          if (isNaN(character * 1)) {
-            if (i != 0 && character == character.toUpperCase()) {
-              toReturn += ' ';
-            }
-          }
-          toReturn += character;
+    'mapErrorLevel': function(level)
+    {
+      var x = '';
+
+      this.errorLevels.forEach(function(el) {
+
+        if (level === el[0]) {
+
+          x = el[1];
+
         }
-      }
-      return toReturn;
+      });
+      return x;
     }
   }
 };

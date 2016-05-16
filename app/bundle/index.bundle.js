@@ -55,8 +55,7 @@
 	      exceptions: [],
 	      messages: [],
 	      hasExceptions : false,
-	      hasMessages: false,
-
+	      hasMessages: false
 	    }
 	  },
 
@@ -82,7 +81,7 @@
 
 	  components: {
 	    'log-exception' : __webpack_require__(1),
-	    'log-message'   : __webpack_require__(8)
+	    'log-message'   : __webpack_require__(5)
 	  }
 	};
 	Vue.ready(window.Index);
@@ -98,7 +97,7 @@
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
 	  console.warn("[vue-loader] app\\vue\\components\\log-exception.vue: named exports in *.vue files are ignored.")}
-	__vue_template__ = __webpack_require__(7)
+	__vue_template__ = __webpack_require__(4)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) {
@@ -122,14 +121,6 @@
 
 	'use strict';
 
-	var _stringify = __webpack_require__(3);
-
-	var _stringify2 = _interopRequireDefault(_stringify);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var errorLevels = [[100, 'DEBUG'], [200, 'INFO'], [250, 'NOTICE'], [300, 'WARNING'], [400, 'ERROR'], [500, 'CRITICAL'], [550, 'ALERT'], [600, 'EMERGENCY']];
-
 	module.exports = {
 	    data: function data() {
 	        return {
@@ -140,115 +131,66 @@
 
 	    props: ['exceptions'],
 
-	    ready: function ready() {
-	        var $this = this;
-
-	        var keys = [];
-
-	        this.exceptions.forEach(function (e) {
-
-	            var y = JSON.parse((0, _stringify2.default)(e.exception));
-
-	            for (e in y) {
-
-	                if (!y.hasOwnProperty(e)) continue;
-
-	                if (keys.indexOf(e) === -1) {
-
-	                    keys.push(e);
-
-	                    $this.exceptionKeys.push(e);
-	                }
-	            }
-	        });
-	    },
-
-
-	    filters: {
-	        'mapErrorLevel': function mapErrorLevel(level) {
-	            var x = '';
-
-	            errorLevels.forEach(function (el) {
-
-	                if (level === el[0]) {
-
-	                    x = el[1];
-	                    return;
-	                }
-	            });
-	            return x;
-	        }
-	    },
-
-	    mixins: [__webpack_require__(6)]
+	    mixins: [__webpack_require__(3)]
 	};
 
 /***/ },
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = { "default": __webpack_require__(4), __esModule: true };
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var core  = __webpack_require__(5)
-	  , $JSON = core.JSON || (core.JSON = {stringify: JSON.stringify});
-	module.exports = function stringify(it){ // eslint-disable-line no-unused-vars
-	  return $JSON.stringify.apply($JSON, arguments);
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports) {
-
-	var core = module.exports = {version: '2.4.0'};
-	if(typeof __e == 'number')__e = core; // eslint-disable-line no-undef
-
-/***/ },
-/* 6 */
 /***/ function(module, exports) {
 
 	
 	module.exports = {
 
+	  data: function() {
+	    return {
+	      errorLevels : [
+	        [100, 'DEBUG'],
+	        [200, 'INFO'],
+	        [250, 'NOTICE'],
+	        [300, 'WARNING'],
+	        [400, 'ERROR'],
+	        [500, 'CRITICAL'],
+	        [550, 'ALERT'],
+	        [600, 'EMERGENCY']
+	      ]
+	    }
+	  },
+
 	  filters: {
-	    'explodingCamels': function(string) {
-	      var toReturn = '';
-	      if (string) {
-	        for (var i = 0; i < string.length; i++) {
-	          var character = string.charAt(i);
-	          if (isNaN(character * 1)) {
-	            if (i != 0 && character == character.toUpperCase()) {
-	              toReturn += ' ';
-	            }
-	          }
-	          toReturn += character;
+	    'mapErrorLevel': function(level)
+	    {
+	      var x = '';
+
+	      this.errorLevels.forEach(function(el) {
+
+	        if (level === el[0]) {
+
+	          x = el[1];
+
 	        }
-	      }
-	      return toReturn;
+	      });
+	      return x;
 	    }
 	  }
 	};
 
 /***/ },
-/* 7 */
+/* 4 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div class=\"uk-panel uk-panel-box uk-panel-box-primary\">\n    <h1 class=\"uk-panel-title\">Exceptions</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td></td>\n            <td><b>Logger Name</b></td>\n            <td><b>Exception Class</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Message</b></td>\n            <td><b>Count</b></td>\n        </tr>\n        </thead>\n        <tbody>\n        <template v-for=\"exception in exceptions\">\n            <tr class=\"\" >\n                <td><div class=\"uk-button\" data-uk-offcanvas=\"{target: '#{{ exception.id }}'}\">Details</div></td>\n                <td>{{ exception.loggerName }}</td>\n                <td>{{ exception.exceptionClass }}</td>\n                <td>{{ exception.errorLevel | mapErrorLevel }}</td>\n                <td>{{ exception.message }}</td>\n                <td>{{ exception.count }}</td>\n            </tr>\n            <!--<tr>-->\n                <!--<td class=\"accordion-td\">-->\n                    <!--<div class=\"uk-accordion-content\">-->\n                        <!--<div class=\"uk-panel uk-panel-box\">-->\n                            <!--<table class=\"uk-table\">-->\n                                <!--<thead>-->\n                                <!--<tr>-->\n                                    <!--<th>File</th>-->\n                                    <!--<th>Line</th>-->\n                                    <!--<th>Dates</th>-->\n                                <!--</tr>-->\n                                <!--</thead>-->\n                                <!--<tbody>-->\n                                <!--<tr>-->\n                                    <!--<td>{{ exception.file }}</td>-->\n                                    <!--<td>{{ exception.line }}</td>-->\n                                    <!--<td>{{ exception.dates }}</td>-->\n                                <!--</tr>-->\n                                <!--</tbody>-->\n                            <!--</table>-->\n                        <!--</div>-->\n                    <!--</div>-->\n                <!--</td>-->\n            <!--</tr>-->\n        </template>\n        </tbody>\n    </table>\n    <div v-for=\"exception in exceptions\" :id=\"exception.id\" class=\"uk-offcanvas\">\n        <div class=\"uk-offcanvas-bar\">\n            <div class=\"uk-panel\">\n                <div class=\"uk-panel-title\">\n                    File\n                </div>\n                <div class=\"uk-text-break\">\n                    {{ exception.file }}\n                </div>\n            </div>\n            <div class=\"uk-panel\">\n                <div class=\"uk-panel-title\">\n                    Line\n                </div>\n                {{ exception.line }}\n            </div>\n            <div class=\"uk-panel\">\n                <div class=\"uk-panel-title\">\n                    Dates\n                </div>\n                <ul>\n                    <li v-for=\"date in exception.dates\">\n                        {{ date }}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</div>\n";
+	module.exports = "\n<div class=\"uk-panel uk-panel-box uk-panel-box-primary\">\n    <h1 class=\"uk-panel-title\">Exceptions</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td><b>Logger Name</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Class</b></td>\n            <td><b>Count</b></td>\n            <td><b>Details</b></td>\n        </tr>\n        </thead>\n        <tbody>\n        <template v-for=\"exception in exceptions\">\n            <tr>\n                <td>{{ exception.loggerName }}</td>\n                <td>{{ exception.errorLevel | mapErrorLevel }}</td>\n                <td>{{ exception.exceptionClass }}</td>\n                <td>{{ exception.count }}</td>\n                <td><a class=\"uk-icon-file-text-o uk-icon-medium\" data-uk-modal=\"{target: '#{{ exception.id }}'}\"></a></td>\n            </tr>\n        </template>\n        </tbody>\n    </table>\n    <div v-for=\"exception in exceptions\" :id=\"exception.id\" class=\"uk-modal\">\n        <div class=\"uk-modal-dialog\">\n            <a class=\"uk-modal-close uk-close\"></a>\n            <div class=\"uk-flex uk-flex-column\">\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <div class=\"uk-panel-title\">\n                        File\n                    </div>\n                    <div class=\"uk-text-break uk-margin-left\">\n                        {{ exception.file }}\n                    </div>\n                </div>\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <div class=\"uk-panel-title\">\n                        Line\n                    </div>\n                    <div class=\"uk-margin-left\">\n                        {{ exception.line }}\n                    </div>\n                </div>\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <div class=\"uk-panel-title\">\n                        Class\n                    </div>\n                    <div class=\"uk-margin-left\">\n                        {{ exception.exceptionClass }}\n                    </div>\n                </div>\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <article>\n                        <hr class=\"uk-article-divider\">\n                    </article>\n                </div>\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <div class=\"uk-panel-title\">\n                        Messages\n                    </div>\n                    <article class=\"uk-margin-left\" v-for=\"message in exception.message\">\n                        <p>{{ message }}</p>\n                    </article>\n                </div>\n                <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                    <div class=\"uk-panel-title\">\n                        Dates\n                    </div>\n                    <article class=\"uk-margin-left\" v-for=\"date in exception.dates\">\n                        <p>{{ date }}</p>\n                    </article>\n                </div>\n            </div>\n        </div>\n    </div>\n</div>\n";
 
 /***/ },
-/* 8 */
+/* 5 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
-	__vue_script__ = __webpack_require__(9)
+	__vue_script__ = __webpack_require__(6)
 	if (__vue_script__ &&
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
 	  console.warn("[vue-loader] app\\vue\\components\\log-message.vue: named exports in *.vue files are ignored.")}
-	__vue_template__ = __webpack_require__(10)
+	__vue_template__ = __webpack_require__(7)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	if (__vue_template__) {
@@ -267,22 +209,23 @@
 	})()}
 
 /***/ },
-/* 9 */
-/***/ function(module, exports) {
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	module.exports = {
 
-	    props: ['log']
+	    props: ['messages'],
 
+	    mixins: [__webpack_require__(3)]
 	};
 
 /***/ },
-/* 10 */
+/* 7 */
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<div class=\"uk-width-1-1\">\n\n    {{ log }}\n\n</div>\n\n";
+	module.exports = "\n<div class=\"uk-panel uk-panel-box\">\n    <h1 class=\"uk-panel-title\">Messages</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td><b>Logger Name</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Message</b></td>\n            <td><b>Count</b></td>\n            <td>Dates</td>\n        </tr>\n        </thead>\n        <tbody>\n        <template v-for=\"message in messages\">\n            <tr class=\"\" >\n                <td>{{ message.loggerName }}</td>\n                <td>{{ message.errorLevel | mapErrorLevel }}</td>\n                <td>{{ message.message }}</td>\n                <td>{{ message.count }}</td>\n                <td><a class=\"uk-icon-calendar uk-icon-medium\" data-uk-modal=\"{target: '#{{ message.id }}'}\"></a></td>\n            </tr>\n        </template>\n        </tbody>\n    </table>\n</div>\n<div v-for=\"message in messages\" :id=\"message.id\" class=\"uk-modal\">\n    <div class=\"uk-modal-dialog\">\n        <a class=\"uk-modal-close uk-close\"></a>\n        <div class=\"uk-flex uk-flex-column\">\n            <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                <div class=\"uk-panel-title\">\n                    Dates\n                </div>\n                <ul>\n                    <li v-for=\"date in message.dates\">\n                        {{ date }}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</div>\n";
 
 /***/ }
 /******/ ]);

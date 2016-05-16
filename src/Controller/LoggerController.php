@@ -21,10 +21,6 @@ use Nativerank\Utilities\PagekitLogger;
  */
 class LoggerController
 {
-    /**
-     * @var LogTrimmer
-     */
-    protected $logTrimmer;
 
     protected $logTruck;
 
@@ -33,7 +29,6 @@ class LoggerController
      */
     public function __construct()
     {
-        $this->logTrimmer = new LogTrimmer();
 
         $this->logTruck = new LogTruck();
     }
@@ -44,11 +39,11 @@ class LoggerController
      */
     function indexAction()
     {
-//        $e = new App\Exception('hello world');
+//        $e = new App\Exception('hello world1');
 //        $logger = new PagekitLogger();
 //        $logger->logException($e);
-
-//        $logger->log('hello world');
+//
+//        $logger->log('hello world1');
 
         $logs = $this->logTruck->getLogs();
 

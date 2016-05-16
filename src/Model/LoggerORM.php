@@ -36,5 +36,8 @@ class LoggerORM implements \JsonSerializable
     public $dates;
 
     /** @Column(type="json_array") */
-    public $log;
+    public $messages;
+
+    /** @Column(type="json_array") */
+    public $exception;
 }

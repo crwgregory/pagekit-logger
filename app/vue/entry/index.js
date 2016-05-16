@@ -9,8 +9,7 @@ window.Index = {
       exceptions: [],
       messages: [],
       hasExceptions : false,
-      hasMessages: false,
-
+      hasMessages: false
     }
   },
 
