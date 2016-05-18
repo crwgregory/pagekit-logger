@@ -63,10 +63,10 @@ return [
             'parent' => 'pagekitlogger',
             'url' => '@logger'
         ],
-        'pagekitlogger: settings' => [
-            'label' => 'Settings',
-            'parent' => 'pagekitlogger',
-            'url' => '@logger/settings'
-        ]
+//        'pagekitlogger: settings' => [
+//            'label' => 'Settings',
+//            'parent' => 'pagekitlogger',
+//            'url' => '@logger/settings'
+//        ]
     ],
 ];

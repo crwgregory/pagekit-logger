@@ -40,20 +40,22 @@ class LoggerController
      */
     function indexAction()
     {
-//        $e = new App\Exception('hello world1');
-//        $logger = new PagekitLogger();
-//        $logger->logException($e);
+
 //
 //        $logger->log('hello world1');
 
-        $mailer = App::mailer()->create();
-
-        $mailer->setTo('crwgregory@gmail.com')
-            ->setSubject('from pagekit')
-            ->setBody('yolo')
-            ->send();
+//        $mailer = App::mailer()->create();
+//
+//        $mailer->setTo('crwgregory@gmail.com')
+//            ->setSubject('from pagekit')
+//            ->setBody('yolo')
+//            ->send();
 
         $logs = $this->logTruck->getLogs();
+
+//        $e = new App\Exception('hello wor2341');
+//        $logger = new PagekitLogger();
+//        $logger->logException($e);
 
         return [
             '$view' => [
