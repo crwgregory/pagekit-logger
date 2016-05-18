@@ -33,7 +33,7 @@
                         Dates
                     </div>
                     <ul class="uk-list">
-                        <li v-for="date in message.dates" class="uk-margin-bottom">
+                        <li v-for="date in message.dates" track-by="$index" class="uk-margin-bottom">
                             {{ date }}
                         </li>
                     </ul>
