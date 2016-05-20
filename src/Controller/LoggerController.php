@@ -8,12 +8,10 @@
 
 namespace Nativerank\Logger\Controller;
 
-use Nativerank\Logger\Utilities\LogTrimmer;
 use Nativerank\Logger\Utilities\LogTruck;
-use Pagekit\Application as App;
+use Nativerank\Logger\Model\LoggerOptionsORM;
 
-use Nativerank\Utilities\PagekitLogger;
-use Pagekit\Mail\Mailer;
+use Pagekit\Application as App;
 
 /**
  * Class LoggerController
@@ -25,7 +23,7 @@ class LoggerController
 
     protected $logTruck;
 
-    protected $config;
+    protected $module;
 
     /**
      * LoggerController constructor.
@@ -34,7 +32,7 @@ class LoggerController
     {
         $this->logTruck = new LogTruck();
 
-        $this->config = App::module('pagekit-logger')->config;
+        $this->module = App::module('pagekit-logger');
     }
 
     /**
@@ -43,22 +41,7 @@ class LoggerController
      */
     function indexAction()
     {
-
-//
-//        $logger->log('hello world1');
-
-//        $mailer = App::mailer()->create();
-//
-//        $mailer->setTo('crwgregory@gmail.com')
-//            ->setSubject('from pagekit')
-//            ->setBody('yolo')
-//            ->send();
-
         $logs = $this->logTruck->getLogs();
-
-//        $e = new App\Exception('hello wor2341');
-//        $logger = new PagekitLogger();
-//        $logger->logException($e);
 
         return [
             '$view' => [
@@ -77,19 +60,107 @@ class LoggerController
      */
     function settingsAction()
     {
-
-        var_dump($this->config);
-//        die;
-
         return [
             '$view' => [
                 'title' => __('Logger Settings'),
                 'name' => 'pagekitlogger:views/settings.php'
             ],
             '$data' => [
-
+                'settings' => $this->module->config
             ]
         ];
     }
 
+    /**
+     * @Route("/save-settings", defaults={"settings" = null}, csrf=true)
+     * @Method("POST")
+     * @Request({"settings" = "array"})
+     */
+    function saveSettingsAction($settings)
+    {
+        try {
+
+            $options = $this->logTruck->getOptions($settings['hash']);
+
+            if ($options !== null) {
+
+                $details = $options->details;
+
+                $details['keep_dates'] = $settings['keepDates'];
+
+                $details['keep_messages'] = $settings['keepMessages'];
+
+                $options->details = $details;
+
+            } else {
+
+                $options = LoggerOptionsORM::create([
+                    'log_hash' => $settings['hash'],
+                    'details' => [
+                        'keep_dates' => $settings['keepDates'],
+                        'keep_messages' => $settings['keepMessages'],
+                    ]
+                ]);
+            }
+
+            $options->save();
+
+            return ['success' => true, 'settings' => $settings];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @Route("/save-default-settings", defaults={"settings" = null}, csrf=true)
+     * @Method("POST")
+     * @Request({"settings" = "array"})
+     */
+    function saveDefaultSettingsAction($settings)
+    {
+        try {
+
+            App::config('pagekit-logger')->set('log_dates', $settings['keepDates']);
+
+            App::config('pagekit-logger')->set('log_messages', $settings['keepMessages']);
+
+            App::config('pagekit-logger')->set('log_level', $settings['logLevel']);
+
+            return ['success' => true, 'settings' => $settings];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @Route("/delete", defaults={"log_hash" = null}, csrf=true)
+     * @Method("DELETE")
+     * @Request({"log_hash" = "string"})
+     */
+    function deleteAction($log_hash)
+    {
+        $log = $this->logTruck->getLog($log_hash);
+
+        $options = $this->logTruck->getOptions($log_hash);
+
+        try {
+
+            $log->delete();
+
+            if ($options !== null) {
+
+                $options->delete();
+            }
+
+            return ['success' => true];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
+    }
 }

@@ -9,6 +9,8 @@
 use Pagekit\Application as App;
 use Nativerank\Utilities\PagekitLogger as Logger;
 
+
+
 return [
 
    'name' => 'pagekit-logger',
@@ -16,8 +18,10 @@ return [
    'type' => 'extension',
 
    'main' => function (App $app) {
-      $app['logger'] = function() {
-        return new Logger();
+
+      $app['getPagekitLogger'] = function() {
+
+        return Logger::getInstance();
       };
    },
 
@@ -38,13 +42,11 @@ return [
     ],
 
     'config' => [
-        'log_path' => App::getInstance()->offsetGet('path.logs'),
-        'created_paths' => [],
         'logger_names' => [],
-        'current_paths' => [],
-        'index_log_level' => 100,
-        'log_date' => true,
-        'exclude_logs' => []
+        'log_level' => 400,
+        'exclude_logs' => [],
+        'log_dates' => true,
+        'log_messages' => true
     ],
 
     'menu' => [

@@ -1,7 +1,7 @@
 <template>
     <div class="uk-panel uk-panel-box uk-panel-box-primary">
         <h1 class="uk-panel-title">Exceptions</h1>
-        <table class="uk-table uk-table-hover">
+        <table class="uk-table">
             <thead>
             <tr>
                 <td><b>Logger Name</b></td>
@@ -9,6 +9,7 @@
                 <td><b>Class</b></td>
                 <td><b>Count</b></td>
                 <td><b>Details</b></td>
+                <td><b>Settings</b></td>
             </tr>
             </thead>
             <tbody>
@@ -18,73 +19,27 @@
                     <td>{{ exception.errorLevel | mapErrorLevel }}</td>
                     <td>{{ exception.exceptionClass }}</td>
                     <td>{{ exception.count }}</td>
-                    <td><a class="uk-icon-file-text-o uk-icon-medium" data-uk-modal="{target: '#{{ exception.id }}'}"></a></td>
+                    <td><a class="uk-icon-file-text-o uk-icon-medium" data-uk-modal="{target: '#exception-{{ exception.id }}'}"></a></td>
+                    <td><a class="uk-icon-cog uk-icon-medium" data-uk-modal="{target: '#settings-{{ exception.id }}'}"></a></td>
                 </tr>
             </template>
             </tbody>
         </table>
         <template v-for="exception in exceptions">
-            <div :id="exception.id" class="uk-modal">
-                <div class="uk-modal-dialog uk-modal-dialog-large">
-                    <a class="uk-modal-close uk-close"></a>
-                    <table class="uk-table uk-table-hover">
-                        <thead>
-                        <tr>
-                            <td><b>File Location</b></td>
-                            <td><b>Line Number</b></td>
-                            <td><b>Exception Class</b></td>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr>
-                            <td>{{ exception.file }}</td>
-                            <td>{{ exception.line }}</td>
-                            <td>{{ exception.exceptionClass }}</td>
-                        </tr>
-                        </tbody>
-                    </table>
-
-                    <div class="uk-grid">
-                        <div class="uk-width-medium-2-10">
-                            <ul class="uk-tab uk-tab-left" data-uk-tab="{connect: '#exception-info-{{ exception.id }}'}">
-                                <li><a href="">Messages</a></li>
-                                <li><a href="">Dates</a></li>
-                            </ul>
-                        </div>
-                        <div class="uk-width-medium-1-2">
-                            <ul id="exception-info-{{ exception.id }}" class="uk-switcher">
-                                <li class="uk-active">
-                                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                                        <ul class="uk-list">
-                                            <li v-for="message in exception.message" track-by="$index" class="uk-margin-bottom">
-                                                {{ message }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                                <li>
-                                    <div class="uk-width-1-1 uk-panel uk-margin-bottom">
-                                        <ul class="uk-list">
-                                            <li v-for="date in exception.dates" track-by="$index" class="uk-margin-bottom">
-                                                {{ date }}
-                                            </li>
-                                        </ul>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <!--<ul class="uk-tab" data-uk-tab="{connect: '#exception-info'}">-->
-                    <!--</ul>-->
-                    <!--<ul id="exception-info" class="uk-switcher uk-margin">-->
-
-                    <!--</ul>-->
-                </div>
-            </div>
+            <exception-details :exception="exception"></exception-details>
+            <exception-settings :exception="exception"></exception-settings>
         </template>
     </div>
 </template>
+<style>
+    .log-row:hover{
+        background: linear-gradient(
+                        rgba(52, 209, 247, 0.5),
+                        rgba(52, 209, 247, 0.5)
+        );
+        cursor: pointer;
+    }
+</style>
 <script>
 
     module.exports = {
@@ -97,6 +52,21 @@
 
         props: ['exceptions'],
 
-        mixins: [require('./../../mixins/mixins.js')]
+        methods: {
+
+            showDetails (id) {
+
+                var modal = UIkit.modal('#' + id);
+
+                modal.show();
+            }
+        },
+
+        mixins: [require('./../../mixins/mixins.js')],
+
+        components: {
+            'exception-details': require('./exception-details.vue'),
+            'exception-settings': require('./exception-settings.vue')
+        }
     }
 </script>

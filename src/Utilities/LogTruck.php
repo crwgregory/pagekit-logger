@@ -9,11 +9,24 @@
 namespace Nativerank\Logger\Utilities;
 
 use Nativerank\Logger\Model\LoggerORM;
+use Nativerank\Logger\Model\LoggerOptionsORM;
+
+use Pagekit\Application as App;
 
 class LogTruck
 {
 
     protected $index;
+
+    protected $module;
+
+    /**
+     * LogTruck constructor.
+     */
+    public function __construct()
+    {
+        $this->module = App::module('pagekit-logger');
+    }
 
     /**
      * Abraham Lincoln lived in a log cabin
@@ -43,12 +56,30 @@ class LogTruck
 
                     $logCabin[$key] = $value;
                 }
+
+                if (($options = $this->getOptions($log['log_hash'])) !== null) {
+
+                    $logCabin['options'] = $options->details;
+
+                } else {
+
+                    $logCabin['options'] = [
+                        'keep_dates' => $this->module->config('log_dates'),
+                        'keep_messages' => $this->module->config('log_messages')
+                    ];
+                }
             }
 
             $logCabin['message'] = $log['messages'];
 
             $logCabin['dates'] = array_map(function($date) {
+
+                if ($date === null) {
+
+                    return null;
+                }
                 $date = new \DateTime($date);
+
                 return date_format($date, 'Y/m/d H:i:s');
 
             }, $log['dates']);
@@ -61,11 +92,21 @@ class LogTruck
 
             $logCabin['id'] = $log['id'];
 
-            $logsArray[] = $isException ? ['exception' => $logCabin] : ['message' => $logCabin];
+            $logCabin['logHash'] = $log['log_hash'];
 
+            $logsArray[] = $isException ? ['exception' => $logCabin] : ['message' => $logCabin];
         }
 
         return $logsArray;
+    }
+
+    /**
+     * @param $hash
+     * @return mixed
+     */
+    public function getOptions($hash)
+    {
+        return LoggerOptionsORM::where(['log_hash = :hash'], ['hash' => $hash])->first();
     }
 
     /**
