@@ -191,9 +191,7 @@
 	            });
 	        }
 	    },
-
 	    mixins: [__webpack_require__(7)]
-
 	};
 
 /***/ },
@@ -201,7 +199,7 @@
 /***/ 20:
 /***/ function(module, exports) {
 
-	module.exports = "\n\n<form class=\"uk-form\" @submit.prevent=\"saveSettings\">\n    <fieldset>\n        <legend>Default Settings</legend>\n        <div class=\"uk-form-row\">\n            <label>\n                <input type=\"checkbox\" v-model=\"settings.log_dates\" :checked=\"settings.log_dates\">\n                Save Dates</label>\n        </div>\n        <div class=\"uk-form-row\">\n            <label>\n                <input type=\"checkbox\" v-model=\"settings.log_messages\" :checked=\"settings.log_messages\">\n                Save Messages\n            </label>\n        </div>\n        <div class=\"uk-form-row\">\n            <select v-model=\"settings.log_level\">\n                <option v-for=\"level in errorLevels\" :value=\"level[0]\" :selected=\"level[0] | isLevel\">\n                    {{ level[1] }}\n                </option>\n            </select>\n            <span class=\"uk-form-help-inline\"><i class=\"uk-icon-info-circle\" data-uk-tooltip title=\"The default error level used when creating a log if one isn't specified.\"></i></span>\n        </div>\n        <button class=\"uk-button uk-button-primary uk-margin-top\" type=\"submit\">Save</button>\n    </fieldset>\n</form>\n\n";
+	module.exports = "\n\n<form class=\"uk-form\" @submit.prevent=\"saveSettings\">\n    <fieldset>\n        <legend>Exception Settings</legend>\n        <div class=\"uk-form-row\">\n            <label>\n                <input type=\"checkbox\" v-model=\"settings.log_dates\" :checked=\"settings.log_dates\">\n                Save Dates</label>\n        </div>\n        <div class=\"uk-form-row\">\n            <label>\n                <input type=\"checkbox\" v-model=\"settings.log_messages\" :checked=\"settings.log_messages\">\n                Save Messages\n            </label>\n        </div>\n        <legend class=\"uk-margin-top\">Default Settings</legend>\n        <div class=\"uk-form-row\">\n            <select v-model=\"settings.log_level\">\n                <option v-for=\"level in errorLevels\" :value=\"level[0]\" :selected=\"level[0] | isLevel\">\n                    {{ level[1] }}\n                </option>\n            </select>\n            <span class=\"uk-form-help-inline\"><i class=\"uk-icon-info-circle\" data-uk-tooltip title=\"The default error level used when creating a log if one isn't specified.\"></i></span>\n        </div>\n        <button class=\"uk-button uk-button-primary uk-margin-large-top\" type=\"submit\">Save</button>\n    </fieldset>\n</form>\n\n";
 
 /***/ }
 
