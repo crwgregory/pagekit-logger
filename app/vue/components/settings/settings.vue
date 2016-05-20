@@ -7,14 +7,12 @@
                 <label>
                     <input type="checkbox" v-model="settings.log_dates" :checked="settings.log_dates">
                     Save Dates</label>
-                <span class="uk-form-help-inline"> <i class="uk-icon-info-circle" data-uk-tooltip title="This will not delete already saved dates for logs."></i></span>
             </div>
             <div class="uk-form-row">
                 <label>
                     <input type="checkbox" v-model="settings.log_messages" :checked="settings.log_messages">
                     Save Messages
                 </label>
-                <span class="uk-form-help-inline"> <i class="uk-icon-info-circle" data-uk-tooltip title="This will not delete already saved messages for logs."></i></span>
             </div>
             <div class="uk-form-row">
                 <select v-model="settings.log_level">
@@ -22,7 +20,7 @@
                         {{ level[1] }}
                     </option>
                 </select>
-                <span class="uk-form-help-inline"> <i class="uk-icon-info-circle" data-uk-tooltip title="The default error level used when creating a log if one isn't specified."></i></span>
+                <span class="uk-form-help-inline"><i class="uk-icon-info-circle" data-uk-tooltip title="The default error level used when creating a log if one isn't specified."></i></span>
             </div>
             <button class="uk-button uk-button-primary uk-margin-top" type="submit">Save</button>
         </fieldset>
