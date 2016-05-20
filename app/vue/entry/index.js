@@ -34,8 +34,8 @@ window.Index = {
   },
 
   components: {
-    'log-exception' : require('./../components/log-exception.vue'),
-    'log-message'   : require('./../components/log-message.vue')
+    'log-exception' : require('./../components/index/log-exception.vue'),
+    'log-message'   : require('./../components/index/log-message.vue')
   }
 };
 Vue.ready(window.Index);

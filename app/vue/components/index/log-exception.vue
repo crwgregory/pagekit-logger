@@ -97,6 +97,6 @@
 
         props: ['exceptions'],
 
-        mixins: [require('./../mixins/mixins.js')]
+        mixins: [require('./../../mixins/mixins.js')]
     }
 </script>

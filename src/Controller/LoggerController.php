@@ -25,13 +25,16 @@ class LoggerController
 
     protected $logTruck;
 
+    protected $config;
+
     /**
      * LoggerController constructor.
      */
     public function __construct()
     {
-
         $this->logTruck = new LogTruck();
+
+        $this->config = App::module('pagekit-logger')->config;
     }
 
     /**
@@ -74,9 +77,9 @@ class LoggerController
      */
     function settingsAction()
     {
-//        $e = new App\Exception('hello');
-//        $logger = new PagekitLogger();
-//        $logger->logException($e);
+
+        var_dump($this->config);
+//        die;
 
         return [
             '$view' => [

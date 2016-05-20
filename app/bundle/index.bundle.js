@@ -96,7 +96,7 @@
 	if (__vue_script__ &&
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
-	  console.warn("[vue-loader] app\\vue\\components\\log-exception.vue: named exports in *.vue files are ignored.")}
+	  console.warn("[vue-loader] app\\vue\\components\\index\\log-exception.vue: named exports in *.vue files are ignored.")}
 	__vue_template__ = __webpack_require__(4)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
@@ -107,7 +107,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "C:\\wamp2.5\\www\\logger\\packages\\nativerank\\pagekit-logger\\app\\vue\\components\\log-exception.vue"
+	  var id = "C:\\wamp2.5\\www\\logger\\packages\\nativerank\\pagekit-logger\\app\\vue\\components\\index\\log-exception.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -189,7 +189,7 @@
 	if (__vue_script__ &&
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
-	  console.warn("[vue-loader] app\\vue\\components\\log-message.vue: named exports in *.vue files are ignored.")}
+	  console.warn("[vue-loader] app\\vue\\components\\index\\log-message.vue: named exports in *.vue files are ignored.")}
 	__vue_template__ = __webpack_require__(7)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
@@ -200,7 +200,7 @@
 	  var hotAPI = require("vue-hot-reload-api")
 	  hotAPI.install(require("vue"), true)
 	  if (!hotAPI.compatible) return
-	  var id = "C:\\wamp2.5\\www\\logger\\packages\\nativerank\\pagekit-logger\\app\\vue\\components\\log-message.vue"
+	  var id = "C:\\wamp2.5\\www\\logger\\packages\\nativerank\\pagekit-logger\\app\\vue\\components\\index\\log-message.vue"
 	  if (!module.hot.data) {
 	    hotAPI.createRecord(id, module.exports)
 	  } else {
@@ -225,7 +225,7 @@
 /* 7 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div class=\"uk-panel uk-panel-box\">\n    <h1 class=\"uk-panel-title\">Messages</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td><b>Logger Name</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Message</b></td>\n            <td><b>Count</b></td>\n            <td>Dates</td>\n        </tr>\n        </thead>\n        <tbody>\n        <template v-for=\"message in messages\">\n            <tr class=\"\" >\n                <td>{{ message.loggerName }}</td>\n                <td>{{ message.errorLevel | mapErrorLevel }}</td>\n                <td>{{ message.message }}</td>\n                <td>{{ message.count }}</td>\n                <td><a class=\"uk-icon-calendar uk-icon-medium\" data-uk-modal=\"{target: '#{{ message.id }}'}\"></a></td>\n            </tr>\n        </template>\n        </tbody>\n    </table>\n</div>\n<div v-for=\"message in messages\" :id=\"message.id\" class=\"uk-modal\">\n    <div class=\"uk-modal-dialog\">\n        <a class=\"uk-modal-close uk-close\"></a>\n        <div class=\"uk-flex uk-flex-column\">\n            <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                <div class=\"uk-panel-title\">\n                    Dates\n                </div>\n                <ul class=\"uk-list\">\n                    <li v-for=\"date in message.dates\" class=\"uk-margin-bottom\">\n                        {{ date }}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</div>\n";
+	module.exports = "\n<div class=\"uk-panel uk-panel-box\">\n    <h1 class=\"uk-panel-title\">Messages</h1>\n    <table class=\"uk-table uk-table-hover\">\n        <thead>\n        <tr>\n            <td><b>Logger Name</b></td>\n            <td><b>Error Level</b></td>\n            <td><b>Message</b></td>\n            <td><b>Count</b></td>\n            <td>Dates</td>\n        </tr>\n        </thead>\n        <tbody>\n        <template v-for=\"message in messages\">\n            <tr class=\"\" >\n                <td>{{ message.loggerName }}</td>\n                <td>{{ message.errorLevel | mapErrorLevel }}</td>\n                <td>{{ message.message }}</td>\n                <td>{{ message.count }}</td>\n                <td><a class=\"uk-icon-calendar uk-icon-medium\" data-uk-modal=\"{target: '#{{ message.id }}'}\"></a></td>\n            </tr>\n        </template>\n        </tbody>\n    </table>\n</div>\n<div v-for=\"message in messages\" :id=\"message.id\" class=\"uk-modal\">\n    <div class=\"uk-modal-dialog\">\n        <a class=\"uk-modal-close uk-close\"></a>\n        <div class=\"uk-flex uk-flex-column\">\n            <div class=\"uk-width-1-1 uk-panel uk-margin-bottom\">\n                <div class=\"uk-panel-title\">\n                    Dates\n                </div>\n                <ul class=\"uk-list\">\n                    <li v-for=\"date in message.dates\" track-by=\"$index\" class=\"uk-margin-bottom\">\n                        {{ date }}\n                    </li>\n                </ul>\n            </div>\n        </div>\n    </div>\n</div>\n";
 
 /***/ }
 /******/ ]);

@@ -113,25 +113,6 @@ class PagekitLogger
   {
     $this->logPath = App::module('pagekit-logger')->config('log_path') . '/' . $filePath;
 
-    $currentPaths = App::module('pagekit-logger')->config('current_paths');
-
-    $currentNames = App::module('pagekit-logger')->config('logger_names');
-
-    if (array_search($this->logPath, $currentPaths) === false) {
-
-      $currentPaths[] = $this->logPath;
-
-      App::config('pagekit-logger')->set('current_paths', $currentPaths);
-    }
-
-    if (array_search($name, $currentNames) === false) {
-
-      $currentNames[] = $name;
-
-      App::config('pagekit-logger')->set('logger_names', $currentNames);
-    }
-
-    $this->logger = new Logger($name);
 
     $this->name = $name;
 

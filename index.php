@@ -41,8 +41,10 @@ return [
         'log_path' => App::getInstance()->offsetGet('path.logs'),
         'created_paths' => [],
         'logger_names' => [],
-        'current_paths' => []
-
+        'current_paths' => [],
+        'index_log_level' => 100,
+        'log_date' => true,
+        'exclude_logs' => []
     ],
 
     'menu' => [
@@ -63,10 +65,10 @@ return [
             'parent' => 'pagekitlogger',
             'url' => '@logger'
         ],
-//        'pagekitlogger: settings' => [
-//            'label' => 'Settings',
-//            'parent' => 'pagekitlogger',
-//            'url' => '@logger/settings'
-//        ]
+        'pagekitlogger: settings' => [
+            'label' => 'Settings',
+            'parent' => 'pagekitlogger',
+            'url' => '@logger/settings'
+        ]
     ],
 ];
