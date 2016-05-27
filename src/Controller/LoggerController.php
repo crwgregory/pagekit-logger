@@ -8,9 +8,10 @@
 
 namespace Nativerank\Logger\Controller;
 
-use Pagekit\Application as App;
+use Nativerank\Logger\Utilities\LogTruck;
+use Nativerank\Logger\Model\LoggerOptionsORM;
 
-use Nativerank\Utilities\PagekitLogger;
+use Pagekit\Application as App;
 
 /**
  * Class LoggerController
@@ -19,93 +20,28 @@ use Nativerank\Utilities\PagekitLogger;
  */
 class LoggerController
 {
+
+    protected $logTruck;
+
+    protected $module;
+
+    /**
+     * LoggerController constructor.
+     */
+    public function __construct()
+    {
+        $this->logTruck = new LogTruck();
+
+        $this->module = App::module('pagekit-logger');
+    }
+
     /**
      * @Route("/")
      * @Method("GET")
      */
     function indexAction()
     {
-//        $e = new App\Exception('hello');
-//        $logger = new PagekitLogger();
-//        $logger->logException($e);
-
-        $currentPaths = App::module('pagekit-logger')->config('current_paths');
-
-        $currentNames = App::module('pagekit-logger')->config('logger_names');
-
-        $data = [];
-
-        foreach ($currentPaths as $path) {
-
-            $handle = fopen($path, 'r');
-
-            if ($handle) {
-
-                while (($line = fgets($handle)) !== false) {
-
-                    foreach ($currentNames as $loggerName) {
-                        if (($pos = strpos($line, $loggerName)) !== false) {
-
-                            if ( !array_key_exists($loggerName, $data) ) {
-                                $data[$loggerName] = [];
-                            }
-                            $message = [];
-                            $message['date'] = substr($line, 1, 19);
-
-                            $x = substr($line, ($pos + strlen($loggerName)), (strlen($line) - $pos));
-
-                            $errorLevel = substr($x, 1, ($y = strpos($x, ':') - 1));
-
-                            $message['error_level'] = $errorLevel;
-
-                            $message['message'] = trim(substr($x, ($y + 2)));
-
-                            $trimmed = $message['message'];
-
-                            if (($e = strpos($trimmed, 'EXCEPTION')) !== false) {
-                                // 'EXCEPTION: ' stlen = 11
-                                $p = 11;
-                                $m = substr($trimmed, $p, (strpos($trimmed, ' ', $p) - $p));
-                                $message['exception_class'] = $m;
-
-                                $trimmed = substr($trimmed, (strpos($trimmed, $m) + strlen($m) + 1));
-                            }
-
-                            if (($e = strpos($trimmed, 'MESSAGE')) !== false) {
-                                // 'MESSAGE: ' stlen = 9
-                                $p = 9;
-                                $m = substr($trimmed, $p, (strpos($trimmed, ' ', $p) - $p));
-                                $message['exception_message'] = $m;
-
-                                $trimmed = substr($trimmed, (strpos($trimmed, $m) + strlen($m) + 1));
-                            }
-
-                            if (($e = strpos($trimmed, 'FILE')) !== false) {
-                                // 'FILE: ' stlen = 6
-                                $p = 6;
-                                $m = substr($trimmed, $p, (strpos($trimmed, ' ', $p) - $p));
-                                $message['exception_file'] = $m;
-
-                                $trimmed = substr($trimmed, (strpos($trimmed, $m) + strlen($m) + 1));
-                            }
-
-                            if (($e = strpos($trimmed, 'LINE')) !== false) {
-                                // 'LINE: ' stlen = 6
-                                $p = 6;
-                                $m = substr($trimmed, $p, (strpos($trimmed, ' ', $p) - $p));
-                                $message['exception_line'] = $m;
-
-                                $trimmed = substr($trimmed, (strpos($trimmed, $m) + strlen($m) + 1));
-                            }
-
-                            $data[$loggerName][] = $message;
-                        }
-                    }
-                }
-            } else {
-                throw new App\Exception('Could not open file: ' . $path);
-            }
-        }
+        $logs = $this->logTruck->getLogs();
 
         return [
             '$view' => [
@@ -113,8 +49,118 @@ class LoggerController
                 'name' => 'pagekitlogger:views/index.php'
             ],
             '$data' => [
-                'logs' => $data
+                'logs' => $logs
             ]
         ];
+    }
+
+    /**
+     * @Route("/settings")
+     * @Method("GET")
+     */
+    function settingsAction()
+    {
+        return [
+            '$view' => [
+                'title' => __('Logger Settings'),
+                'name' => 'pagekitlogger:views/settings.php'
+            ],
+            '$data' => [
+                'settings' => $this->module->config
+            ]
+        ];
+    }
+
+    /**
+     * @Route("/save-settings", defaults={"settings" = null}, csrf=true)
+     * @Method("POST")
+     * @Request({"settings" = "array"})
+     */
+    function saveSettingsAction($settings)
+    {
+        try {
+
+            $options = $this->logTruck->getOptions($settings['hash']);
+
+            if ($options !== null) {
+
+                $details = $options->details;
+
+                $details['keep_dates'] = $settings['keepDates'];
+
+                $details['keep_messages'] = $settings['keepMessages'];
+
+                $options->details = $details;
+
+            } else {
+
+                $options = LoggerOptionsORM::create([
+                    'log_hash' => $settings['hash'],
+                    'details' => [
+                        'keep_dates' => $settings['keepDates'],
+                        'keep_messages' => $settings['keepMessages'],
+                    ]
+                ]);
+            }
+
+            $options->save();
+
+            return ['success' => true, 'settings' => $settings];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @Route("/save-default-settings", defaults={"settings" = null}, csrf=true)
+     * @Method("POST")
+     * @Request({"settings" = "array"})
+     */
+    function saveDefaultSettingsAction($settings)
+    {
+        try {
+
+            App::config('pagekit-logger')->set('log_dates', $settings['keepDates']);
+
+            App::config('pagekit-logger')->set('log_messages', $settings['keepMessages']);
+
+            App::config('pagekit-logger')->set('log_level', $settings['logLevel']);
+
+            return ['success' => true, 'settings' => $settings];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
+    }
+
+    /**
+     * @Route("/delete", defaults={"log_hash" = null}, csrf=true)
+     * @Method("DELETE")
+     * @Request({"log_hash" = "string"})
+     */
+    function deleteAction($log_hash)
+    {
+        $log = $this->logTruck->getLog($log_hash);
+
+        $options = $this->logTruck->getOptions($log_hash);
+
+        try {
+
+            $log->delete();
+
+            if ($options !== null) {
+
+                $options->delete();
+            }
+
+            return ['success' => true];
+
+        } catch (\Exception $e) {
+
+            return ['success' => false, 'exception_message' => $e->getMessage()];
+        }
     }
 }

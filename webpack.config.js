@@ -4,7 +4,8 @@ var path = require('path');
 module.exports = [
   {
     entry: {
-      "index": "./app/vue/entry/index.js"
+      "index": "./app/vue/entry/index.js",
+      "settings": "./app/vue/entry/settings.js"
     },
     output: {
       path: path.join(__dirname, 'app/bundle'),

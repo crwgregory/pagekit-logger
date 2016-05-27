@@ -1,6 +1,6 @@
 {
   "name": "nativerank/pagekit-logger",
-  "version": "0.3.2",
+  "version": "1.0.0",
   "type": "pagekit-extension",
   "title": "Pagekit Logger",
   "description": "Easy logging in any of your Pagekit extensions",
@@ -9,10 +9,11 @@
     {
       "name": "Chris Gregory",
       "email": "crwgregory@gamil.com",
-      "homepage": "crwgregory.com"
+      "homepage": "http://crwgregory.com"
     }
   ],
   "extra": {
-    "icon": "log.svg"
+    "icon": "log.svg",
+    "scripts": "scripts.php"
   }
 }

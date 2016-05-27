@@ -8,9 +8,12 @@
 
 namespace Nativerank\Utilities;
 
+use MongoDB\Driver\Exception\Exception;
 use Monolog\Handler\StreamHandler;
 use Pagekit\Log\Logger;
 use Pagekit\Application as App;
+use Nativerank\Logger\Model\LoggerORM;
+use Nativerank\Logger\Utilities\LogTruck;
 
 class PagekitLogger
 {
@@ -92,109 +95,269 @@ class PagekitLogger
   protected $logger;
 
   /**
-   * LogHelper constructor.
-   * @param string $name Name for the Logger ie: Nativerank, Pagekit, MyExtension
-   * @param string $filePath Allows for multiple log files default = errors.log ie: MyExtension/MyClass.log,
-   *  MyCompany/MyException.log
+   * @var string
    */
-  public function __construct($name = 'PagekitLogger', $filePath = 'errors.log')
+  protected $name;
+
+  /**
+   * @var LogTruck
+   */
+  protected $logTruck;
+
+  protected $isLogDates;
+
+  protected $isLogMessages;
+
+  protected $module;
+
+  protected $logLevel;
+
+  protected static $instance;
+
+  /**
+   * LogHelper constructor.
+   * @param array $options
+   * @throws \Exception
+   */
+  public function __construct($options = [])
   {
-    $this->logPath = App::module('pagekit-logger')->config('log_path') . '/' . $filePath;
+    $this->module = App::module('pagekit-logger');
 
-    $currentPaths = App::module('pagekit-logger')->config('current_paths');
+    $this->name = array_key_exists('name', $options) ? $options['name'] : 'PagekitLogger';
 
-    $currentNames = App::module('pagekit-logger')->config('logger_names');
+    if (array_key_exists('logDates', $options)) {
 
-    if (array_search($this->logPath, $currentPaths) === false) {
+      if (is_bool($options['logDates'])) {
 
-      $currentPaths[] = $this->logPath;
+        $this->isLogDates = $options['logDates'];
 
-      App::config('pagekit-logger')->set('current_paths', $currentPaths);
+        $this->module->config('log_dates')->set($options['logDates']);
+
+      } else {
+
+        throw new \Exception('logDates must be a boolean. Got: ' . gettype($options['logDates']));
+      }
+
+    } else {
+
+      $this->isLogDates = $this->module->config('log_dates');
     }
 
-    if (array_search($name, $currentNames) === false) {
+    if (array_key_exists('logMessages', $options)) {
 
-      $currentNames[] = $name;
+      if (is_bool($options['logMessages'])) {
 
-      App::config('pagekit-logger')->set('logger_names', $currentNames);
+        $this->isLogMessages = $options['logMessages'];
+
+        $this->module->config('log_messages')->set($options['logMessages']);
+
+      } else {
+
+        throw new \Exception('logMessages must be a boolean. Got: ' . gettype($options['logMessages']));
+      }
+
+    } else {
+
+      $this->isLogMessages = $this->module->config('log_messages');
     }
 
-    $this->logger = new Logger($name);
+    if (array_key_exists('logLevel', $options)) {
+
+      if (is_int($options['logLevel'])) {
+
+        $this->logLevel = $options['logLevel'];
+
+        $this->module->config('log_level')->set($options['logLevel']);
+
+      } else {
+
+        throw new \Exception('logLevel must be a int. Got: ' . gettype($options['logLevel']));
+      }
+
+    } else {
+
+      $this->logLevel = $this->module->config('log_level');
+    }
+
+    $this->logTruck = new LogTruck();
+
+    self::$instance = $this;
+  }
+
+  public static function getInstance($options = [])
+  {
+    if (self::$instance === null) {
+
+      self::$instance = new self($options);
+    }
+    return self::$instance;
   }
 
   /**
    * @param \Exception $e
-   * @param boolean $trace
    * @param int $level
    * @throws App\Exception
    */
-  public function logException($e, $trace = false, $level = null) {
-    $message =  'EXCEPTION: ' . get_class($e) .
-                ' MESSAGE: '  . $e->getMessage() .
-                ' FILE: '     . $e->getFile() .
-                ' LINE: '     . $e->getLine();
+  public function logException($e, $level = null)
+  {
 
-    if ($trace == true) {
-      $message .= ' TRACE: ' . $e->getTraceAsString();
-    }
+    $message['exception_class'] = get_class($e);
 
-    if ($level != null) {
+    $message['message'] = $e->getMessage();
+
+    $message['file'] = $e->getFile();
+
+    $message['line'] = $e->getLine();
+
+    if ($level !== null) {
+
       if (!array_key_exists($level, $this->levels)) {
+
         throw new App\Exception('Provided log level did not match any known values: ' . $level);
       }
+
     } else if (array_key_exists($e->getCode(), $this->levels)) {
+
       $level = intval($e->getCode());
+
     } else {
-      $level = Logger::ERROR;
+
+      $level = $this->logLevel;
     }
 
     $this->log($message, $level);
   }
 
   /**
-   * @param string $message What would you like to say?
+   * @param string|\Exception $message What would you like to say?
    * @param integer $level Provided by the constants shamelessly stolen from the Monolog\Logger.php class.
    * Thanks Monolog!
    * @throws App\Exception
    */
-  public function log($message, $level  = Logger::ERROR) {
+  public function log($message, $level = null)
+  {
+    if (is_a($message, 'Exception')) {
 
-    // TODO: Add mailing for certain logs.
-    switch($level) {
-      case $this->levels[$level] == 'DEBUG':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::DEBUG));
-        $this->logger->addDebug($message);
-        break;
-      case $this->levels[$level] == 'INFO':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::INFO));
-        $this->logger->addInfo($message);
-        break;
-      case $this->levels[$level] == 'NOTICE':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::NOTICE));
-        $this->logger->addNotice($message);
-        break;
-      case $this->levels[$level] == 'WARNING':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::WARNING));
-        $this->logger->addWarning($message);
-        break;
-      case $this->levels[$level] == 'ERROR':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::ERROR));
-        $this->logger->addError($message);
-        break;
-      case $this->levels[$level] == 'CRITICAL':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::CRITICAL));
-        $this->logger->addCritical($message);
-        break;
-      case $this->levels[$level] == 'ALERT':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::ALERT));
-        $this->logger->addAlert($message);
-        break;
-      case $this->levels[$level] == 'EMERGENCY':
-        $this->logger->pushHandler(new StreamHandler($this->logPath, Logger::EMERGENCY));
-        $this->logger->addEmergency($message);
-        break;
-      default:
-        throw new App\Exception('Provided log level did not match any known values: ' . $level);
+      $this->logException($message, $level);
+
+    } else {
+
+      if ($level === null) {
+
+        $level = $this->logLevel;
+      }
+      $hash = $this->getHash($message);
+
+      $log = $this->logTruck->getLog($hash);
+
+      $options = $this->logTruck->getOptions($hash);
+
+      if ($options !== null) {
+
+        $options = (array) $options->details;
+
+        if (array_key_exists('keep_dates', $options)) {
+
+          $this->isLogDates = $options['keep_dates'];
+        }
+        if (array_key_exists('keep_messages', $options)) {
+
+          $this->isLogMessages = $options['keep_messages'];
+        }
+      }
+
+      $logMessage = null;
+
+      if (is_array($message)) {
+
+        if ($this->isLogMessages) {
+
+          $logMessage = $message['message'];
+        }
+        unset($message['message']);
+
+        $exception = $message;
+
+      } else {
+
+        $logMessage = $message;
+
+        $exception = null;
+      }
+
+
+      if ($log === null) {
+
+        $date = null;
+
+        if ($this->isLogDates === true) {
+
+          $date = gmdate(DATE_ATOM);
+        }
+
+        $log = LoggerORM::create(
+            [
+                'log_hash' => $hash,
+                'count' => 1,
+                'error_level' => $level,
+                'logger_name' => $this->name,
+                'messages' => [$logMessage],
+                'exception' => $exception,
+                'dates' => [$date]
+            ]
+        );
+
+      } else {
+
+        $log->count = intval($log->count) + 1;
+
+        if ($this->isLogMessages) {
+
+          if (array_search($logMessage, $log->messages) === false) {
+
+            array_push($log->messages, $logMessage);
+          }
+        }
+        if ($this->isLogDates) {
+
+          array_push($log->dates, gmdate(DATE_ATOM));
+        }
+      }
+      $log->save();
     }
+  }
+
+  /**
+   * @param $message
+   * @return string
+   */
+  private function getHash($message)
+  {
+    $toHash = '';
+
+    if (is_array($message)) {
+
+      foreach ($message as $key => $value) {
+
+        if ($key !== 'message') {
+
+          for ($i = 0; $i < strlen($value); $i += 3) {
+
+            $toHash .= substr($value, $i, 1);
+          }
+        }
+      }
+
+    } else {
+
+      $messageLngth = strlen($message);
+
+      for ($i = 0; $i < $messageLngth; $i++) {
+
+        $toHash .= substr($message, $i, 1);
+      }
+    }
+
+    return hash('md5', $toHash);
   }
 }

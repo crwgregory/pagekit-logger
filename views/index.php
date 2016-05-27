@@ -1,6 +1,13 @@
-<?php $view->script('index', 'pagekitlogger:app/bundle/index.bundle.js', ['vue', 'uikit-tooltip']); ?>
+<?php $view->script('index', 'pagekitlogger:app/bundle/index.bundle.js', ['vue', 'uikit-modal', 'uikit-tab', 'uikit-tooltip']); ?>
 <?php $view->style('analyze-css', 'pagekitlogger:app/assets/styles/index.css'); ?>
 
-<div id="pagekit-logger-index">
-    <index-component :logs="logs"></index-component>
+<div id="pagekit-logger-index" class="uk-grid">
+
+    <div class="uk-width-1-1">
+        <log-exception v-if="hasExceptions" :exceptions="exceptions"></log-exception>
+    </div>
+
+    <div class="uk-width-1-1">
+        <log-message v-if="hasMessages" :messages="messages"></log-message>
+    </div>
 </div>
