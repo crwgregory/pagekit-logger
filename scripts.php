@@ -19,10 +19,6 @@ return [
                 $table->addColumn('exception', 'json_array', ['notnull' => false]);
 
                 $table->setPrimaryKey(['id']);
-
-                $table->addUniqueIndex(['log_hash'], 'LOG_HASH');
-                $table->addIndex(['error_level'], 'ERROR_LEVEL');
-                $table->addIndex(['logger_name'], 'LOGGER_NAME');
             });
         }
 
