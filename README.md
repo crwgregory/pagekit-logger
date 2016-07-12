@@ -8,13 +8,6 @@
 php pagekit install nativerank/pagekit-logger   // Activate after installing in the System
 ```
 
-#### Defaults:
-```
-Name:       PagekitLogger
-
-Log Level: ERROR
-```
-
 #### Basic Usage:
 ```
 // Log a simple String
@@ -34,8 +27,14 @@ $logger = new PagekitLogger(['name'] => 'MyLogger');                // Change Lo
 $logger->log('Hello log!', PagekitLogger::INFO);                    // Log level INFO
 
 // Exceptions:
-$logger->logException($e, true);                                    // Log the exception trace
-$logger->logException($e, {true|false}, PagekitLogger::CRITICAL);   // Custom Error Level
+$logger->log($e, PagekitLogger::CRITICAL);                          // Custom Error Level
+```
+
+#### Defaults:
+```
+Name:       PagekitLogger
+
+Log Level:  ERROR
 ```
 
 #### Log Levels:
