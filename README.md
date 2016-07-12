@@ -21,7 +21,7 @@ $logger->log($e);
 #### Options:
 ```
 // Name
-$logger = new PagekitLogger(['name'] => 'MyLogger');                // Change Logger name
+$logger = new PagekitLogger(['name' => 'MyLogger']);                // Change Logger name
 
 // Log Level
 $logger->log('Hello log!', PagekitLogger::INFO);                    // Log level INFO
