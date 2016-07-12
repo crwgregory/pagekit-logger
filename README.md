@@ -1,6 +1,8 @@
 # pagekit-logger
 ## Allows for easy logging in the Pagekit CMS
 
+![pagekit-logger-preview](https://cloud.githubusercontent.com/assets/9405969/16782635/b00867e0-483d-11e6-9ab5-5dbac842bd21.gif)
+
 #### Install:
 ```
 php pagekit install nativerank/pagekit-logger   // Activate after installing in the System
